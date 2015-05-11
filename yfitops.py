@@ -10,7 +10,7 @@ import time
 import webbrowser
 import xml.etree.ElementTree as et
 
-SCRIPT_NAME = 'backup-spotify'
+SCRIPT_NAME = 'yfitops'
 
 CLIENT_ID = '53cba83ffc2e48d39f43ec187cb10482'
 CLIENT_SECRET = '0e291e61e2e74f17a902e9f822e0c532'
@@ -161,7 +161,7 @@ while True:
 
 
 # Write XML output
-xml_filename = 'out.xml'
+xml_filename = SCRIPT_NAME + '-' + time.strftime('%Y%m%d-%H%M%S') + '.xml'
 with open(xml_filename, 'w') as xml_file:
 	xml_file.write('<?xml version="1.0" encoding="utf-8"?>\n')
 	ElementTree_Indent(xml_root)
