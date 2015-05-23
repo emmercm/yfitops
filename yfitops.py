@@ -73,7 +73,7 @@ def Spotify_Login():
 	cherrypy.config.update({'server.socket_port':8080, 'environment':'embedded'})
 	cherrypy.quickstart(TokenHandler())
 
-def SpotifyPager(pager, xml_root, xml_name):
+def SpotifyPager(pager, xml_root, xml_name, expand=False):
 	while True:
 		# If the current pager does not have the key 'items' try to look for it in sub-items
 		if type(pager) is dict and not 'items' in pager:
@@ -84,6 +84,11 @@ def SpotifyPager(pager, xml_root, xml_name):
 		# Process current items in pager
 		print "Processing " + str(pager['offset']+1) + "-" + str(pager['offset']+len(pager['items'])) + " / " + str(pager['total']) + " " + xml_name + "s..."
 		for item in pager['items']:
+			if expand == True:
+				if item['type'] == 'album':
+					item = spotify.album(item['id'])
+				if item['type'] == 'playlist':
+					item = spotify.user_playlist(item['owner']['id'], item['id'])
 			xml_elem = et.SubElement(xml_root, xml_name)
 			Var2XML(xml_elem, item)
 		# Get next set of items from pager
@@ -168,7 +173,7 @@ xml_new_releases = et.SubElement(xml_root, 'new_releases')
 print "Fetching new album releases..."
 new_releases_albums = spotify.new_releases(country=current_user_country)
 xml_new_releases_albums = et.SubElement(xml_new_releases, 'albums')
-SpotifyPager(new_releases_albums, xml_new_releases_albums, 'album')
+SpotifyPager(new_releases_albums, xml_new_releases_albums, 'album', True)
 print ""
 
 
@@ -187,18 +192,7 @@ print ""
 print "Fetching user playlists..."
 playlists = spotify.user_playlists(current_user_id)
 xml_playlists = et.SubElement(xml_root, 'user_playlists')
-while True:
-	print "Processing " + str(playlists['offset']+1) + "-" + str(playlists['offset']+len(playlists['items'])) + " / " + str(playlists['total']) + " playlists..."
-	for playlist in playlists['items']:
-		# spotify.user_playlist() is spotify.user_playlists() plus tracks and followers
-		playlist = spotify.user_playlist(playlist['owner']['id'], playlist['id'])
-		xml_playlist = et.SubElement(xml_playlists, 'playlist')
-		Var2XML(xml_playlist, playlist)
-	# Continue to process all playlists
-	if playlists['next']:
-		playlists = spotify.next(playlists)
-	else:
-		break
+SpotifyPager(playlists, xml_playlists, 'playlist', True)
 print ""
 
 

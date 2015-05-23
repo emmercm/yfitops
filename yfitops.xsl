@@ -155,6 +155,9 @@
 						text-transform: uppercase;
 						border-bottom: 1px solid #222326;
 					}
+					#content .playlist-playlists h5:not(:first-child) a {
+						color: #88898C;
+					}
 					#content .playlist-playlists ul.list-inline > li {
 						width: 25%;
 						margin-bottom: 25px;
@@ -311,7 +314,8 @@
 																		<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
 																		<xsl:value-of select="@name" />
 																	</a>
-																	by <a>
+																	by
+																	<a>
 																		<xsl:attribute name="href"><xsl:value-of select="owner/external_urls/@spotify" /></xsl:attribute>
 																		<xsl:value-of select="owner/@id" />
 																	</a>
@@ -344,6 +348,9 @@
 																		<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
 																		<xsl:value-of select="@name" />
 																	</a>
+																</h5>
+																<h5>
+																	<xsl:apply-templates select="artists" />
 																</h5>
 															</div>
 														</li>
@@ -499,13 +506,7 @@
 							</a>
 						</td>
 						<td>
-							<xsl:for-each select="track/artists/artist">
-								<xsl:if test="position()>1">, </xsl:if>
-								<a>
-									<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
-									<xsl:value-of select="@name" />
-								</a>
-							</xsl:for-each>
+							<xsl:apply-templates select="track/artists" />
 						</td>
 						<td class="text-right">
 							<xsl:value-of select="floor(round(track/@duration_ms div 1000) div 60)" />:<xsl:value-of select="concat(substring('0',1,2-string-length(round(track/@duration_ms div 1000) mod 60)), round(track/@duration_ms div 1000) mod 60)" />
@@ -530,5 +531,15 @@
 				</xsl:for-each>
 			</tbody>
 		</table>
+	</xsl:template>
+	
+	<xsl:template match="artists[descendant::artist]">
+		<xsl:for-each select="artist">
+			<xsl:if test="position() > 1">, </xsl:if>
+			<a>
+				<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
+				<xsl:value-of select="@name" />
+			</a>
+		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
