@@ -39,7 +39,7 @@
 						background-color: #222326;
 					}
 					#nav[data-spy='affix'] {
-						width: 25%;  /* col-md-3 */
+						width: 25%;  /* col-xs-3 */
 						top: 0;
 						right: 0;
 						bottom: 0;
@@ -170,7 +170,7 @@
 			</head>
 			<body>
 				<div class="row row-no-margin">
-					<div class="col-md-3 col-no-padding">
+					<div class="col-xs-3 col-no-padding">
 						<ul id="nav" class="nav" data-spy="affix">
 							<!-- MAIN -->
 							<xsl:if test="current_user">
@@ -217,19 +217,19 @@
 						</ul>
 					</div>
 					
-					<div id="content" class="col-md-9 col-no-padding">
+					<div id="content" class="col-xs-9 col-no-padding">
 						<!-- MAIN -->
 						<xsl:if test="current_user">
 							<section id="main">
 								<!-- Profile -->
 								<section id="current_user">
 									<div class="row playlist-header">
-										<div class="col-md-2">
+										<div class="col-xs-2">
 											<img class="lazy">
 												<xsl:attribute name="data-original"><xsl:value-of select="current_user/images/image/@url"></xsl:value-of></xsl:attribute>
 											</img>
 										</div>
-										<div class="col-md-10">
+										<div class="col-xs-10">
 											<h4>User</h4>
 											<h2>
 												<a>
@@ -240,7 +240,7 @@
 										</div>
 									</div>
 									<div class="row playlist-subheader">
-										<div class="col-md-12">
+										<div class="col-xs-12">
 											ID:
 											<a>
 												<xsl:attribute name="href"><xsl:value-of select="current_user/external_urls/@spotify" /></xsl:attribute>
@@ -250,7 +250,7 @@
 										</div>
 									</div>
 									<div class="row playlist-playlists">
-										<div class="col-md-12">
+										<div class="col-xs-12">
 											<h1>Public Playlists</h1>
 											<ul class="list-inline">
 												<xsl:for-each select="user_playlists/playlist[@public='True']/owner[@id = /*/current_user/@id]/..">
@@ -282,7 +282,7 @@
 								<xsl:if test="user_saved/tracks">
 									<section id="user_saved_tracks">
 										<div class="row">
-											<div class="col-md-12">
+											<div class="col-xs-12">
 												<xsl:apply-templates select="user_saved/tracks/items" />
 											</div>
 										</div>
@@ -298,12 +298,12 @@
 										<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
 										
 										<div class="row playlist-header">
-											<div class="col-md-2">
+											<div class="col-xs-2">
 												<img class="lazy">
 													<xsl:attribute name="data-original"><xsl:value-of select="images/image/@url" /></xsl:attribute>
 												</img>
 											</div>
-											<div class="col-md-10">
+											<div class="col-xs-10">
 												<h4>
 													<xsl:if test="@collaborative = 'True'">Collaborative</xsl:if>
 													Playlist
@@ -320,7 +320,7 @@
 											</div>
 										</div>
 										<div class="row playlist-subheader">
-											<div class="col-md-12">
+											<div class="col-xs-12">
 												Created by:
 												<a>
 													<xsl:attribute name="href"><xsl:value-of select="owner/external_urls/@spotify" /></xsl:attribute>
@@ -333,7 +333,7 @@
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-md-12">
+											<div class="col-xs-12">
 												<xsl:apply-templates select="tracks/items" />
 											</div>
 										</div>
