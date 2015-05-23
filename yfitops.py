@@ -130,11 +130,14 @@ Var2XML(xml_current_user, current_user)
 
 
 # Process library information
+xml_user_saved = et.SubElement(xml_root, 'user_saved')
+
 saved_tracks = spotify.current_user_saved_tracks()
-xml_saved_tracks = et.SubElement(xml_root, 'user_saved_tracks')
+xml_user_saved_tracks = et.SubElement(xml_user_saved, 'user_saved_tracks')
+xml_user_saved_tracks_items = et.SubElement(xml_user_saved_tracks, 'items')
 while True:
 	for track in saved_tracks['items']:
-		xml_saved_track = et.SubElement(xml_saved_tracks, 'saved_track')
+		xml_saved_track = et.SubElement(xml_user_saved_tracks_items, 'item')
 		Var2XML(xml_saved_track, track)
 	# Continue to process all tracks
 	if saved_tracks['next']:
