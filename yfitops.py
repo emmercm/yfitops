@@ -73,6 +73,25 @@ def Spotify_Login():
 	cherrypy.config.update({'server.socket_port':8080, 'environment':'embedded'})
 	cherrypy.quickstart(TokenHandler())
 
+def SpotifyPager(pager, xml_root, xml_name):
+	while True:
+		# If the current pager does not have the key 'items' try to look for it in sub-items
+		if type(pager) is dict and not 'items' in pager:
+			for key in pager.keys():
+				if type(pager[key]) is dict and 'items' in pager[key]:
+					pager = pager[key]
+					break
+		# Process current items in pager
+		print "Processing " + str(pager['offset']+1) + "-" + str(pager['offset']+len(pager['items'])) + " / " + str(pager['total']) + " " + xml_name + "s..."
+		for item in pager['items']:
+			xml_elem = et.SubElement(xml_root, xml_name)
+			Var2XML(xml_elem, item)
+		# Get next set of items from pager
+		if pager['next']:
+			pager = spotify.next(pager)
+		else:
+			break;
+
 def Var2XML(root, item, name=None):
 	if name is None:
 		name = root.tag
@@ -125,40 +144,30 @@ current_user_id = current_user['id']
 print "Logged in as: " + current_user_id + "\n"
 
 
-# Process user information
+# Fetch user information
 print "Fetching user profile..."
 xml_current_user = et.SubElement(xml_root, 'current_user')
 Var2XML(xml_current_user, current_user)
 print ""
 
 
-# Process library information
+# Fetch user saved items
 xml_user_saved = et.SubElement(xml_root, 'user_saved')
 
 print "Fetching saved tracks..."
 saved_tracks = spotify.current_user_saved_tracks()
-xml_user_saved_tracks = et.SubElement(xml_user_saved, 'user_saved_tracks')
+xml_user_saved_tracks = et.SubElement(xml_user_saved, 'tracks')
 xml_user_saved_tracks_items = et.SubElement(xml_user_saved_tracks, 'items')
-while True:
-	print "Processing " + str(saved_tracks['offset']) + "-" + str(saved_tracks['offset']+len(saved_tracks['items'])) + " / " + str(saved_tracks['total']) + " tracks..."
-	for track in saved_tracks['items']:
-		xml_saved_track = et.SubElement(xml_user_saved_tracks_items, 'item')
-		Var2XML(xml_saved_track, track)
-	# Continue to process all tracks
-	if saved_tracks['next']:
-		saved_tracks = spotify.next(saved_tracks)
-	else:
-		break
+SpotifyPager(saved_tracks, xml_user_saved_tracks_items, 'item')
 print ""
 
 
-# Process playlist information
+# Fetch user playlists
 print "Fetching user playlists..."
 playlists = spotify.user_playlists(current_user_id)
 xml_playlists = et.SubElement(xml_root, 'user_playlists')
-xml_playlists.attrib['total'] = str(playlists['total'])
 while True:
-	print "Processing " + str(playlists['offset']) + "-" + str(playlists['offset']+len(playlists['items'])) + " / " + str(playlists['total']) + " playlists..."
+	print "Processing " + str(playlists['offset']+1) + "-" + str(playlists['offset']+len(playlists['items'])) + " / " + str(playlists['total']) + " playlists..."
 	for playlist in playlists['items']:
 		# spotify.user_playlist() is spotify.user_playlists() plus tracks and followers
 		playlist = spotify.user_playlist(playlist['owner']['id'], playlist['id'])

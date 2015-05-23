@@ -171,7 +171,7 @@
 			<body>
 				<div class="row row-no-margin">
 					<div class="col-md-3 col-no-padding">
-						<ul id="nav" class="nav hidden-xs hidden-sm" data-spy="affix">
+						<ul id="nav" class="nav" data-spy="affix">
 							<!-- MAIN -->
 							<xsl:if test="current_user">
 								<li>
@@ -188,7 +188,7 @@
 								<li>
 									<a href="#user_saved">Your Music</a>
 									<ul class="nav">
-										<xsl:if test="user_saved/user_saved_tracks">
+										<xsl:if test="user_saved/tracks">
 											<li>
 												<a href="#user_saved_tracks"><i class="fa fa-music" />Songs</a>
 											</li>
@@ -279,11 +279,11 @@
 						<xsl:if test="user_saved[descendant::*]">
 							<section id="user_saved">
 								<!-- Songs -->
-								<xsl:if test="user_saved/user_saved_tracks">
+								<xsl:if test="user_saved/tracks">
 									<section id="user_saved_tracks">
 										<div class="row">
 											<div class="col-md-12">
-												<xsl:apply-templates select="user_saved/user_saved_tracks/items" />
+												<xsl:apply-templates select="user_saved/tracks/items" />
 											</div>
 										</div>
 									</section>
