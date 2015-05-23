@@ -46,7 +46,7 @@ def Spotify_Login():
 	authorize_state = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
 	authorize_params = {'client_id':CLIENT_ID, 'response_type':'code', 'redirect_uri':CLIENT_REDIR, 'state':authorize_state, 'scope':CLIENT_SCOPE}
 	authorize = requests.get('https://accounts.spotify.com/authorize', params=authorize_params)
-	print '\nTo accept application authorization, please navigate here:\n\n' + authorize.url
+	print "\nTo accept application authorization, please navigate here:\n\n" + authorize.url
 	webbrowser.open(authorize.url)
 	
 	# Receive Spotify callbacks
@@ -66,9 +66,9 @@ def Spotify_Login():
 					token_response = token.json()
 					if 'access_token' in token_response and 'refresh_token' in token_response:
 						SPOTIFY_TOKEN_INFO = token_response
-						print '\nAuthentication successful'
+						print "\nAuthentication successful"
 					else:
-						print '\nAuthentication failed'
+						print "\nAuthentication failed"
 					cherrypy.engine.exit()
 	cherrypy.config.update({'server.socket_port':8080, 'environment':'embedded'})
 	cherrypy.quickstart(TokenHandler())
@@ -122,20 +122,25 @@ spotify = spotipy.Spotify(auth=spotify_token)
 # Get authenticated user information
 current_user = spotify.current_user()
 current_user_id = current_user['id']
+print "Logged in as: " + current_user_id + "\n"
 
 
 # Process user information
+print "Fetching user profile..."
 xml_current_user = et.SubElement(xml_root, 'current_user')
 Var2XML(xml_current_user, current_user)
+print ""
 
 
 # Process library information
 xml_user_saved = et.SubElement(xml_root, 'user_saved')
 
+print "Fetching saved tracks..."
 saved_tracks = spotify.current_user_saved_tracks()
 xml_user_saved_tracks = et.SubElement(xml_user_saved, 'user_saved_tracks')
 xml_user_saved_tracks_items = et.SubElement(xml_user_saved_tracks, 'items')
 while True:
+	print "Processing " + str(saved_tracks['offset']) + "-" + str(saved_tracks['offset']+len(saved_tracks['items'])) + " / " + str(saved_tracks['total']) + " tracks..."
 	for track in saved_tracks['items']:
 		xml_saved_track = et.SubElement(xml_user_saved_tracks_items, 'item')
 		Var2XML(xml_saved_track, track)
@@ -144,13 +149,16 @@ while True:
 		saved_tracks = spotify.next(saved_tracks)
 	else:
 		break
+print ""
 
 
 # Process playlist information
+print "Fetching user playlists..."
 playlists = spotify.user_playlists(current_user_id)
 xml_playlists = et.SubElement(xml_root, 'user_playlists')
 xml_playlists.attrib['total'] = str(playlists['total'])
 while True:
+	print "Processing " + str(playlists['offset']) + "-" + str(playlists['offset']+len(playlists['items'])) + " / " + str(playlists['total']) + " playlists..."
 	for playlist in playlists['items']:
 		# spotify.user_playlist() is spotify.user_playlists() plus tracks and followers
 		playlist = spotify.user_playlist(playlist['owner']['id'], playlist['id'])
@@ -161,12 +169,15 @@ while True:
 		playlists = spotify.next(playlists)
 	else:
 		break
+print ""
 
 
 # Write XML output
 xml_filename = SCRIPT_NAME + '-' + time.strftime('%Y%m%d-%H%M%S') + '.xml'
+print "Writing XML to " + xml_filename + "..."
 with open(xml_filename, 'w') as xml_file:
 	xml_file.write('<?xml version="1.0" encoding="utf-8"?>\n')
 	xml_file.write('<?xml-stylesheet type="text/xsl" href="'+SCRIPT_NAME+'.xsl"?>\n')
 	ElementTree_Indent(xml_root)
 	et.ElementTree(xml_root).write(xml_file, xml_declaration=False, encoding='utf-8', method='xml')
+print ""
