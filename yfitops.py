@@ -167,5 +167,6 @@ while True:
 xml_filename = SCRIPT_NAME + '-' + time.strftime('%Y%m%d-%H%M%S') + '.xml'
 with open(xml_filename, 'w') as xml_file:
 	xml_file.write('<?xml version="1.0" encoding="utf-8"?>\n')
+	xml_file.write('<?xml-stylesheet type="text/xsl" href="'+SCRIPT_NAME+'.xsl"?>\n')
 	ElementTree_Indent(xml_root)
 	et.ElementTree(xml_root).write(xml_file, xml_declaration=False, encoding='utf-8', method='xml')
