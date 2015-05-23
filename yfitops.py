@@ -15,7 +15,7 @@ SCRIPT_NAME = 'yfitops'
 CLIENT_ID = '53cba83ffc2e48d39f43ec187cb10482'
 CLIENT_SECRET = '0e291e61e2e74f17a902e9f822e0c532'
 CLIENT_REDIR = 'http://127.0.0.1:8080/callback'
-CLIENT_SCOPE = 'playlist-read-private user-library-read'
+CLIENT_SCOPE = 'playlist-read-private user-library-read user-read-private'
 
 SPOTIFY_TOKEN_INFO = None
 
@@ -141,6 +141,7 @@ spotify = spotipy.Spotify(auth=spotify_token)
 # Get authenticated user information
 current_user = spotify.current_user()
 current_user_id = current_user['id']
+current_user_country = current_user['country']
 print "Logged in as: " + current_user_id + "\n"
 
 
@@ -148,6 +149,26 @@ print "Logged in as: " + current_user_id + "\n"
 print "Fetching user profile..."
 xml_current_user = et.SubElement(xml_root, 'current_user')
 Var2XML(xml_current_user, current_user)
+print ""
+
+
+# Fetch spotify featured
+xml_featured = et.SubElement(xml_root, 'featured')
+
+print "Fetching featured playlists..."
+featured_playlists = spotify.featured_playlists(country=current_user_country)
+xml_featured_playlists = et.SubElement(xml_featured, 'playlists')
+SpotifyPager(featured_playlists, xml_featured_playlists, 'playlist')
+print ""
+
+
+# Fetch new releases
+xml_new_releases = et.SubElement(xml_root, 'new_releases')
+
+print "Fetching new album releases..."
+new_releases_albums = spotify.new_releases(country=current_user_country)
+xml_new_releases_albums = et.SubElement(xml_new_releases, 'albums')
+SpotifyPager(new_releases_albums, xml_new_releases_albums, 'album')
 print ""
 
 
