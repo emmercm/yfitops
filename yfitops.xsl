@@ -6,7 +6,6 @@
 				<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css' />
 				
 				<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
-				<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
 				
 				<link href="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js" rel="stylesheet" />
 				<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
@@ -67,7 +66,7 @@
 					#nav > li > a {
 						text-transform: uppercase;
 					}
-					#nav > li > ul > li .fa {
+					#nav > li > ul > li .glyphicon {
 						margin-right: 15px;
 						color: #FFFFFF;
 					}
@@ -147,10 +146,12 @@
 						border-color: #222326;
 					}
 					
+					#content .playlist-playlists {
+						color: #88898C;
+					}
 					#content .playlist-playlists h1 {
 						padding-bottom: 10px;
 						font-size: 14px;
-						color: #88898C;
 						text-transform: uppercase;
 						border-bottom: 1px solid #222326;
 					}
@@ -173,13 +174,22 @@
 					<div class="col-xs-3 col-no-padding">
 						<ul id="nav" class="nav" data-spy="affix">
 							<!-- MAIN -->
-							<xsl:if test="current_user">
+							<xsl:if test="current_user | featured[descendant::*] | new_releases[descendant::*]">
 								<li>
 									<a href="#main">Main</a>
 									<ul class="nav">
-										<li>
-											<a href="#current_user"><i class="fa fa-user" />Profile</a>
-										</li>
+										<!-- Profile -->
+										<xsl:if test="current_user">
+											<li>
+												<a href="#current_user"><span class="glyphicon glyphicon-user" />Profile</a>
+											</li>
+										</xsl:if>
+										<!-- Browse -->
+										<xsl:if test="featured[descendant::*] | new_releases[descendant::*]">
+											<li>
+												<a href="#browse"><span class="glyphicon glyphicon-folder-open" />Browse</a>
+											</li>
+										</xsl:if>
 									</ul>
 								</li>
 							</xsl:if>
@@ -190,7 +200,7 @@
 									<ul class="nav">
 										<xsl:if test="user_saved/tracks">
 											<li>
-												<a href="#user_saved_tracks"><i class="fa fa-music" />Songs</a>
+												<a href="#user_saved_tracks"><span class="glyphicon glyphicon-music" />Songs</a>
 											</li>
 										</xsl:if>
 									</ul>
@@ -205,7 +215,7 @@
 											<li>
 												<a>
 													<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
-													<i class="fa fa-music" />
+													<span class="glyphicon glyphicon-music" />
 													<xsl:value-of select="@name" />
 													<xsl:if test="owner/@id != /*/current_user/@id"> by <xsl:value-of select="owner/@id" /></xsl:if>
 												</a>
@@ -255,23 +265,93 @@
 											<ul class="list-inline">
 												<xsl:for-each select="user_playlists/playlist[@public='True']/owner[@id = /*/current_user/@id]/..">
 													<li>
-														<a>
-															<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
-															<div class="row">
+														<div class="row">
+															<a>
+																<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
 																<img class="lazy">
 																	<xsl:attribute name="data-original"><xsl:value-of select="images/image/@url" /></xsl:attribute>
 																</img>
-															</div>
-															<div class="row">
-																<h5><xsl:value-of select="@name" /></h5>
-																<h5><xsl:value-of select="followers/@total" /> follower<xsl:if test="followers/@total != 1">s</xsl:if></h5>
-															</div>
-														</a>
+															</a>
+														</div>
+														<div class="row">
+															<h5>
+																<a>
+																	<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
+																	<xsl:value-of select="@name" />
+																</a>
+															</h5>
+															<h5><xsl:value-of select="followers/@total" /> follower<xsl:if test="followers/@total != 1">s</xsl:if></h5>
+														</div>
 													</li>
 												</xsl:for-each>
 											</ul>
 										</div>
 									</div>
+								</section>
+								<!-- Browse -->
+								<section id="browse">
+									<xsl:if test="featured/playlists">
+										<div class="row playlist-playlists">
+											<div class="col-xs-12">
+												<h1>Featured Playlists</h1>
+												<ul class="list-inline">
+													<xsl:for-each select="featured/playlists/playlist">
+														<li>
+															<div class="row">
+																<a>
+																	<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
+																	<img class="lazy">
+																		<xsl:attribute name="data-original"><xsl:value-of select="images/image/@url" /></xsl:attribute>
+																	</img>
+																</a>
+															</div>
+															<div class="row">
+																<h5>
+																	<a>
+																		<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
+																		<xsl:value-of select="@name" />
+																	</a>
+																	by <a>
+																		<xsl:attribute name="href"><xsl:value-of select="owner/external_urls/@spotify" /></xsl:attribute>
+																		<xsl:value-of select="owner/@id" />
+																	</a>
+																</h5>
+															</div>
+														</li>
+													</xsl:for-each>
+												</ul>
+											</div>
+										</div>
+									</xsl:if>
+									<xsl:if test="new_releases/albums">
+										<div class="row playlist-playlists">
+											<div class="col-xs-12">
+												<h1>New Releases</h1>
+												<ul class="list-inline">
+													<xsl:for-each select="new_releases/albums/album">
+														<li>
+															<div class="row">
+																<a>
+																	<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
+																	<img class="lazy">
+																		<xsl:attribute name="data-original"><xsl:value-of select="images/image/@url" /></xsl:attribute>
+																	</img>
+																</a>
+															</div>
+															<div class="row">
+																<h5>
+																	<a>
+																		<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
+																		<xsl:value-of select="@name" />
+																	</a>
+																</h5>
+															</div>
+														</li>
+													</xsl:for-each>
+												</ul>
+											</div>
+										</div>
+									</xsl:if>
 								</section>
 							</section>
 						</xsl:if>
@@ -370,7 +450,7 @@
 							// #nav .active toggling
 							var $a = $(this);
 							$nav.find('li.active').removeClass('active');
-							$nav.find("a[href='"+$a.attr('href')+"']").parent().addClass('active');
+							$nav.find("a[href='"+$a.attr('href')+"']").parents('li').addClass('active');
 							// #content display toggling
 							$section = $('#'+$a.attr('href').substring(1));
 							$('#content').find('section:visible').hide();
