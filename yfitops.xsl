@@ -163,12 +163,16 @@
 						margin-bottom: 25px;
 						vertical-align: top;
 					}
-					#content .playlist-playlists ul.list-inline > li div {
+					#content .playlist-playlists ul.list-inline > li > div {
 						margin: 0;
 					}
-					#content .playlist-playlists ul.list-inline > li div:last-child {
+					#content .playlist-playlists ul.list-inline > li > div:last-child {
 						padding: 0 10px;
 						background-color: #222326;
+					}
+					#content .playlist-playlists ul.list-inline > li > div > * {
+						overflow: hidden;
+						text-overflow: ellipsis;
 					}
 				</style>
 			</head>
