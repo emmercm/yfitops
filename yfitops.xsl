@@ -390,14 +390,13 @@
 							bInfo: false
 						});
 						
-						// Navigation click events
-						$("a[href*='#']").click(function() {
+						// History backwards/forwards (includes hash changes)
+						window.onpopstate = function(event) {
 							// #nav .active toggling
-							var $a = $(this);
 							$nav.find('li.active').removeClass('active');
-							$nav.find("a[href='"+$a.attr('href')+"']").parents('li').addClass('active');
+							$nav.find("a[href='"+window.location.hash+"']").parents('li').addClass('active');
 							// #content display toggling
-							$section = $('#'+$a.attr('href').substring(1));
+							var $section = $('#'+window.location.hash.substring(1));
 							$('#content').find('section:visible').hide();
 							$section.show();
 							$section.parents(':not(:visible)').show();
@@ -406,13 +405,12 @@
 							// DataTables.js re-layout
 							$section.find('table.dataTable').css('width','');
 							$section.find('table.dataTable').DataTable().columns.adjust().draw();
-						});
-						// Trigger navigation click event on page load
-						if(window.location.hash != '') {
-							$("#nav li > a[href='"+window.location.hash+"']").click();
-						} else {
-							$("#nav > li > ul > li > a").first().click();
 						}
+						// Fake a history event on page load
+						if(window.location.hash == '') {
+							history.replaceState({}, "", $("#nav > li > ul > li > a").first().attr('href'));
+						}
+						window.onpopstate();
 					});
 				]]></script>
 			</body>
