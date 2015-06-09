@@ -181,7 +181,7 @@
 					<div class="col-xs-3 col-no-padding">
 						<ul id="nav" class="nav" data-spy="affix">
 							<!-- MAIN -->
-							<xsl:if test="current_user | featured[descendant::*] | new_releases[descendant::*]">
+							<xsl:if test="current_user | featured[child::*] | new_releases[child::*]">
 								<li>
 									<a href="#main">Main</a>
 									<ul class="nav">
@@ -192,7 +192,7 @@
 											</li>
 										</xsl:if>
 										<!-- Browse -->
-										<xsl:if test="featured[descendant::*] | new_releases[descendant::*]">
+										<xsl:if test="featured[child::*] | new_releases[child::*]">
 											<li>
 												<a href="#browse"><span class="glyphicon glyphicon-folder-open" />Browse</a>
 											</li>
@@ -201,7 +201,7 @@
 								</li>
 							</xsl:if>
 							<!-- YOUR MUSIC -->
-							<xsl:if test="user_saved[descendant::*]">
+							<xsl:if test="user_saved[child::*]">
 								<li>
 									<a href="#user_saved">Your Music</a>
 									<ul class="nav">
@@ -301,7 +301,7 @@
 							</section>
 						</xsl:if>
 						<!-- YOUR MUSIC -->
-						<xsl:if test="user_saved[descendant::*]">
+						<xsl:if test="user_saved[child::*]">
 							<section id="user_saved">
 								<!-- Songs -->
 								<xsl:if test="user_saved/tracks">
@@ -417,7 +417,7 @@
 		</html>
 	</xsl:template>
 	
-	<xsl:template match="items[descendant::item]">
+	<xsl:template match="items[child::item]">
 		<table class="table">
 			<thead>
 				<tr>
@@ -516,7 +516,7 @@
 		</li>
 	</xsl:template>
 	
-	<xsl:template match="artists[descendant::artist]">
+	<xsl:template match="artists[child::artist]">
 		<xsl:for-each select="artist">
 			<xsl:if test="position() > 1">, </xsl:if>
 			<a>
