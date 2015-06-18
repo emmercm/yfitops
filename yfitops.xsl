@@ -3,11 +3,10 @@
 	<xsl:template match="/yfitops">
 		<html>
 			<head>
-				<link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css' />
+				<link href='http://fonts.googleapis.com/css?family=Montserrat' rel="stylesheet" type="text/css" />
 				
 				<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
 				
-				<link href="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js" rel="stylesheet" />
 				<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
 				
 				<style type="text/css">
