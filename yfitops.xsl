@@ -89,6 +89,7 @@
 						padding: 20px;
 						background-color: #121314;
 						color: #DFE0E5;
+						overflow: hidden;
 					}
 					#content section {
 						display: none;
@@ -144,6 +145,7 @@
 					#content .table > tbody > tr > td {
 						color: #949599;
 						border-color: #222326;
+						text-align: left;
 					}
 					
 					#content .playlist-playlists {
@@ -403,15 +405,26 @@
 							// jquery_lazyload
 							$section.find('img.lazy').not("[src*='http']").lazyload({effect:"fadeIn"});
 							// DataTables.js re-layout
-							$section.find('table.dataTable').css('width','');
-							$section.find('table.dataTable').DataTable().columns.adjust().draw();
+							onResize();
 						}
 						// Fake a history event on page load
 						if(window.location.hash == '') {
 							history.replaceState({}, "", $("#nav > li > ul > li > a").first().attr('href'));
 						}
 						window.onpopstate();
+						
+						var resizeTimeout;
+						$(window).resize(function() {
+							resizeTimeout = setTimeout(onResize, 250);
+						});
 					});
+					
+					function onResize() {
+						// DataTables.js re-layout
+						$dataTable = $('#content section:visible section:visible table.dataTable');
+						$dataTable.css('width','');
+						$dataTable.DataTable().columns.adjust().draw();
+					}
 				]]></script>
 			</body>
 		</html>
