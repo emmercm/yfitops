@@ -396,6 +396,11 @@
 							// #nav .active toggling
 							$nav.find('li.active').removeClass('active');
 							$nav.find("a[href='"+window.location.hash+"']").parents('li').addClass('active');
+							// #nav scrolling
+							var $nav_li = $nav.find("a[href='"+window.location.hash+"']").closest('li');
+							if(($nav_li.position().top + $nav_li.height() > $nav.scrollTop() + $nav.height()) || ($nav_li.position().top < $nav.scrollTop)) {
+								$nav.scrollTop( $nav_li.position().top );
+							}
 							// #content display toggling
 							var $section = $('#'+window.location.hash.substring(1));
 							$('#content').find('section:visible').hide();
