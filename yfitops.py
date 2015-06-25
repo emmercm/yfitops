@@ -27,6 +27,16 @@ class NullStream():
 sys.stderr = NullStream()
 
 
+def log(s):
+	# Insert timestamp before first non-special ASCII character
+	s = str(s)
+	for i, c in enumerate(s):
+		if ord(c) >= 32:
+			s = s[:i] + '[' + time.strftime('%H:%M:%S') + '] ' + s[i:]
+			break
+	sys.stdout.write(s)
+
+
 # Emulate spotipy.util.prompt_for_user_token() but use Spotify_Login() for authentication
 def Spotify_OAuth():
 	# Start spotipy.oauth2 and get cached tokens
@@ -46,7 +56,7 @@ def Spotify_Login():
 	authorize_state = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(16))
 	authorize_params = {'client_id':CLIENT_ID, 'response_type':'code', 'redirect_uri':CLIENT_REDIR, 'state':authorize_state, 'scope':CLIENT_SCOPE}
 	authorize = requests.get('https://accounts.spotify.com/authorize', params=authorize_params)
-	print "\nTo accept application authorization, please navigate here:\n\n" + authorize.url
+	log("\nTo accept application authorization, please navigate here:\n\n" + authorize.url + "\n")
 	webbrowser.open(authorize.url)
 	
 	# Receive Spotify callbacks
@@ -65,10 +75,10 @@ def Spotify_Login():
 					token_response = token.json()
 					if 'access_token' in token_response and 'refresh_token' in token_response:
 						SPOTIFY_TOKEN_INFO = token_response
-						print '\nAuthentication succeeded'
+						log("\nAuthentication succeeded\n")
 						yield '<h1 style="font-family:Arial; color:green; text-align:center; margin-top:100px;">' + SCRIPT_NAME + ' authentication succeeded</h1>'
 					else:
-						print '\nAuthentication failed'
+						log("\nAuthentication failed\n")
 						yield '<h1 style="font-family:Arial; color:red; text-align:center; margin-top:100px;">' + SCRIPT_NAME + ' authentication failed</h1>'
 					cherrypy.engine.exit()
 	cherrypy.config.update({'server.socket_port':8080, 'environment':'embedded'})
@@ -83,7 +93,7 @@ def SpotifyPager(pager, xml_root, xml_name, expand=False):
 					pager = pager[key]
 					break
 		# Process current items in pager
-		print "Processing " + str(pager['offset']+1) + "-" + str(pager['offset']+len(pager['items'])) + " / " + str(pager['total']) + " " + xml_name + "s..."
+		log("Processing " + str(pager['offset']+1) + "-" + str(pager['offset']+len(pager['items'])) + " / " + str(pager['total']) + " " + xml_name + "s...\n")
 		for item in pager['items']:
 			if expand == True:
 				if item['type'] == 'album':
@@ -148,11 +158,11 @@ spotify = spotipy.Spotify(auth=spotify_token)
 current_user = spotify.current_user()
 current_user_id = current_user['id']
 current_user_country = current_user['country']
-print "\nLogged in as: " + current_user_id + "\n"
+log("\nLogged in as: " + current_user_id + "\n\n")
 
 
 # Fetch user information
-print "Fetching user profile..."
+log("Fetching user profile...\n")
 xml_current_user = et.SubElement(xml_root, 'current_user')
 Var2XML(xml_current_user, current_user)
 print ""
@@ -161,7 +171,7 @@ print ""
 # Fetch spotify featured
 xml_featured = et.SubElement(xml_root, 'featured')
 
-print "Fetching featured playlists..."
+log("Fetching featured playlists...\n")
 featured_playlists = spotify.featured_playlists(country=current_user_country)
 xml_featured_playlists = et.SubElement(xml_featured, 'playlists')
 SpotifyPager(featured_playlists, xml_featured_playlists, 'playlist')
@@ -171,7 +181,7 @@ print ""
 # Fetch new releases
 xml_new_releases = et.SubElement(xml_root, 'new_releases')
 
-print "Fetching new album releases..."
+log("Fetching new album releases...\n")
 new_releases_albums = spotify.new_releases(country=current_user_country)
 xml_new_releases_albums = et.SubElement(xml_new_releases, 'albums')
 SpotifyPager(new_releases_albums, xml_new_releases_albums, 'album', True)
@@ -181,7 +191,7 @@ print ""
 # Fetch user saved items
 xml_user_saved = et.SubElement(xml_root, 'user_saved')
 
-print "Fetching saved tracks..."
+log("Fetching saved tracks...\n")
 saved_tracks = spotify.current_user_saved_tracks()
 xml_user_saved_tracks = et.SubElement(xml_user_saved, 'tracks')
 xml_user_saved_tracks_items = et.SubElement(xml_user_saved_tracks, 'items')
@@ -190,7 +200,7 @@ print ""
 
 
 # Fetch user playlists
-print "Fetching user playlists..."
+log("Fetching user playlists...\n")
 playlists = spotify.user_playlists(current_user_id)
 xml_playlists = et.SubElement(xml_root, 'user_playlists')
 SpotifyPager(playlists, xml_playlists, 'playlist', True)
@@ -199,7 +209,7 @@ print ""
 
 # Write XML output
 xml_filename = SCRIPT_NAME + '-' + time.strftime('%Y%m%d-%H%M%S') + '.xml'
-print "Writing XML to " + xml_filename + "..."
+log("Writing XML to " + xml_filename + "...\n")
 with open(xml_filename, 'w') as xml_file:
 	xml_file.write('<?xml version="1.0" encoding="utf-8"?>\n')
 	xml_file.write('<?xml-stylesheet type="text/xsl" href="'+SCRIPT_NAME+'.xsl"?>\n')
