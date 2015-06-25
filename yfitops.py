@@ -51,9 +51,8 @@ def Spotify_Login():
 	
 	# Receive Spotify callbacks
 	class TokenHandler(object):
-		AccessToken = None
-		RefreshToken = None
 		@cherrypy.expose
+		@cherrypy.tools.allow(methods=['GET'])
 		def callback(self, **kwargs):
 			global SPOTIFY_TOKEN_INFO
 			# Receive /authorize callback, send /token request
@@ -66,9 +65,11 @@ def Spotify_Login():
 					token_response = token.json()
 					if 'access_token' in token_response and 'refresh_token' in token_response:
 						SPOTIFY_TOKEN_INFO = token_response
-						print "\nAuthentication successful"
+						print '\nAuthentication succeeded'
+						yield '<h1 style="font-family:Arial; color:green; text-align:center; margin-top:100px;">' + SCRIPT_NAME + ' authentication succeeded</h1>'
 					else:
-						print "\nAuthentication failed"
+						print '\nAuthentication failed'
+						yield '<h1 style="font-family:Arial; color:red; text-align:center; margin-top:100px;">' + SCRIPT_NAME + ' authentication failed</h1>'
 					cherrypy.engine.exit()
 	cherrypy.config.update({'server.socket_port':8080, 'environment':'embedded'})
 	cherrypy.quickstart(TokenHandler())
@@ -147,7 +148,7 @@ spotify = spotipy.Spotify(auth=spotify_token)
 current_user = spotify.current_user()
 current_user_id = current_user['id']
 current_user_country = current_user['country']
-print "Logged in as: " + current_user_id + "\n"
+print "\nLogged in as: " + current_user_id + "\n"
 
 
 # Fetch user information
