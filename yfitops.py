@@ -207,6 +207,23 @@ SpotifyPager(playlists, xml_playlists, 'playlist', True)
 print ""
 
 
+# Fetch owner profiles
+log("Fetching playlist owner profiles...\n")
+owners = []
+for owner in xml_root.findall('.//owner[@id]'):
+	if owner.attrib['id'] != current_user_id:
+		owners.append(owner.attrib['id'])
+owners = sorted(set(owners))
+if len(owners) > 0:
+	xml_users = et.SubElement(xml_root, 'users')
+	for i, owner in enumerate(owners):
+		log("Processing " + str(i) + " / " + str(len(owners)) + " users...\n")
+		user = spotify.user(owner)
+		xml_user = et.SubElement(xml_users, 'user')
+		Var2XML(xml_user, user)
+print ""
+
+
 # Write XML output
 xml_filename = SCRIPT_NAME + '-' + time.strftime('%Y%m%d-%H%M%S') + '.xml'
 log("Writing XML to " + xml_filename + "...\n")
