@@ -232,7 +232,7 @@
 										<xsl:for-each select="user_playlists/playlist">
 											<li>
 												<a>
-													<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
+													<xsl:attribute name="href">#<xsl:value-of select="@uri" /></xsl:attribute>
 													<span class="glyphicon glyphicon-music" />
 													<xsl:value-of select="@name" />
 													<xsl:if test="owner/@id != /*/current_user/@id"> by <xsl:apply-templates select="owner" /></xsl:if>
@@ -251,7 +251,7 @@
 										<xsl:for-each select="users/user">
 											<li>
 												<a>
-													<xsl:attribute name="href">#<xsl:value-of select="@id" /></xsl:attribute>
+													<xsl:attribute name="href">#<xsl:value-of select="@uri" /></xsl:attribute>
 													<span class="glyphicon glyphicon-user" />
 													<xsl:value-of select="@display_name" />
 												</a>
@@ -319,7 +319,7 @@
 							<section id="user_playlists">
 								<xsl:for-each select="user_playlists/playlist">
 									<section>
-										<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+										<xsl:attribute name="id"><xsl:value-of select="@uri" /></xsl:attribute>
 										<div class="row playlist-header">
 											<div class="col-xs-2">
 												<xsl:apply-templates select="images" />
@@ -368,7 +368,7 @@
 							<section id="users">
 								<xsl:for-each select="users/user">
 									<section>
-										<xsl:attribute name="id"><xsl:value-of select="@id" /></xsl:attribute>
+										<xsl:attribute name="id"><xsl:value-of select="@uri" /></xsl:attribute>
 										<xsl:apply-templates select="." />
 									</section>
 								</xsl:for-each>
@@ -514,7 +514,7 @@
 				<a>
 					<xsl:attribute name="href">
 						<xsl:variable name="item_id" select="@id" />
-						<xsl:if test="count(/*/user_playlists/playlist[@id = $item_id]) > 0">#<xsl:value-of select="@id" /></xsl:if>
+						<xsl:if test="count(/*/user_playlists/playlist[@id = $item_id]) > 0">#<xsl:value-of select="@uri" /></xsl:if>
 						<xsl:if test="count(/*/user_playlists/playlist[@id = $item_id]) = 0"><xsl:value-of select="external_urls/@spotify" /></xsl:if>
 					</xsl:attribute>
 					<xsl:apply-templates select="images" />
@@ -525,7 +525,7 @@
 					<a>
 						<xsl:attribute name="href">
 							<xsl:variable name="item_id" select="@id" />
-							<xsl:if test="count(/*/user_playlists/playlist[@id = $item_id]) > 0">#<xsl:value-of select="@id" /></xsl:if>
+							<xsl:if test="count(/*/user_playlists/playlist[@id = $item_id]) > 0">#<xsl:value-of select="@uri" /></xsl:if>
 							<xsl:if test="count(/*/user_playlists/playlist[@id = $item_id]) = 0"><xsl:value-of select="external_urls/@spotify" /></xsl:if>
 						</xsl:attribute>
 						<xsl:value-of select="@name" />
@@ -620,7 +620,7 @@
 	<xsl:template match="external_urls[parent::owner] | external_urls[parent::added_by]">
 		<xsl:variable name="owner_id" select="../@id" />
 		<xsl:choose>
-			<xsl:when test="/*/users/user[@id = $owner_id]">#<xsl:value-of select="$owner_id" /></xsl:when>
+			<xsl:when test="/*/users/user[@id = $owner_id]">#<xsl:value-of select="/*/users/user[@id = $owner_id]/@uri" /></xsl:when>
 			<xsl:otherwise><xsl:value-of select="@spotify" /></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
