@@ -609,6 +609,9 @@
 	<xsl:template match="owner | added_by">
 		<xsl:variable name="owner_id" select="@id" />
 		<xsl:choose>
+			<xsl:when test="/*/current_user/@id = $owner_id">
+				<xsl:value-of select="/*/current_user/@display_name" />
+			</xsl:when>
 			<xsl:when test="/*/users/user[@id = $owner_id] and /*/users/user[@id = $owner_id]/@display_name != 'None'">
 				<xsl:value-of select="/*/users/user[@id = $owner_id]/@display_name" />
 			</xsl:when>
@@ -620,6 +623,7 @@
 	<xsl:template match="external_urls[parent::owner] | external_urls[parent::added_by]">
 		<xsl:variable name="owner_id" select="../@id" />
 		<xsl:choose>
+			<xsl:when test="/*/current_user/@id = $owner_id">#current_user</xsl:when>
 			<xsl:when test="/*/users/user[@id = $owner_id]">#<xsl:value-of select="/*/users/user[@id = $owner_id]/@uri" /></xsl:when>
 			<xsl:otherwise><xsl:value-of select="@spotify" /></xsl:otherwise>
 		</xsl:choose>
