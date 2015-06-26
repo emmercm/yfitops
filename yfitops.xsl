@@ -573,7 +573,14 @@
 				<h2>
 					<a>
 						<xsl:attribute name="href"><xsl:value-of select="external_urls/@spotify" /></xsl:attribute>
-						<xsl:value-of select="@display_name" />
+						<xsl:choose>
+							<xsl:when test="@display_name != 'None'">
+								<xsl:value-of select="@display_name" />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="@id" />
+							</xsl:otherwise>
+						</xsl:choose>
 					</a>
 				</h2>
 			</div>
