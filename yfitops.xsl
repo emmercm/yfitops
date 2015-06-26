@@ -400,21 +400,36 @@
 						
 						// History backwards/forwards (includes hash changes)
 						window.onpopstate = function(event) {
+							var $a = $nav.find("a[href='"+window.location.hash+"']");
+							// Ensure navigation item exists and is second-level
+							if(!$a.length) {
+								$a = $("#nav a").first();
+							}
+							if($a.parents('ul').length < 2) {
+								$a = $a.closest('li').find('ul a').first();
+							}
+							if(window.location.hash != $a.attr('href').substring(1)) {
+								history.replaceState({}, "", $a.attr('href'));
+							}
 							// #nav .active toggling
 							$nav.find('li.active').removeClass('active');
-							$nav.find("a[href='"+window.location.hash+"']").parents('li').addClass('active');
+							$a.parents('li').addClass('active');
 							// #nav scrolling
-							var $nav_li = $nav.find("a[href='"+window.location.hash+"']").closest('li');
+							var $nav_li = $a.closest('li');
+							if(!$nav_li.length) {
+								$nav_li = $nav.children('li').first();
+							}
 							if(($nav_li.position().top + $nav_li.height() > $nav.scrollTop() + $nav.height()) || ($nav_li.position().top < $nav.scrollTop)) {
 								$nav.scrollTop( $nav_li.position().top );
 							}
+							
 							// #content display toggling
-							var $section = $('#'+window.location.hash.substring(1));
+							var $section = $(window.location.hash);
 							$('#content').find('section:visible').hide();
 							$section.show();
 							$section.parents(':not(:visible)').show();
 							// jquery_lazyload
-							$section.find('img.lazy').not("[src*='http']").lazyload({effect:"fadeIn"});
+							$section.find('img.lazy').not("[src^='http']").show().lazyload({effect:"fadeIn"});
 							// DataTables.js re-layout
 							onResize();
 						}
