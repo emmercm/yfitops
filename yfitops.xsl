@@ -424,7 +424,7 @@
 							}
 							
 							// #content display toggling
-							var $section = $(window.location.hash);
+							var $section = $("section[id='"+window.location.hash.substring(1)+"']");
 							$('#content').find('section:visible').hide();
 							$section.show();
 							$section.parents(':not(:visible)').show();
