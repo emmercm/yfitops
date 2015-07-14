@@ -153,6 +153,10 @@
 					#content .table > tbody > tr > td.nowrap {
 						white-space: nowrap;
 					}
+					#content .table .glyphicon-warning-sign {
+						float: right;
+						color: #777777;
+					}
 					
 					#content .playlist-playlists {
 						color: #88898C;
@@ -479,6 +483,9 @@
 								<xsl:attribute name="href"><xsl:value-of select="track/external_urls/@spotify" /></xsl:attribute>
 								<xsl:value-of select="track/@name" />
 							</a>
+							<xsl:if test="track/@explicit = 'True'">
+								<span class="glyphicon glyphicon-warning-sign" title="EXPLICIT" />
+							</xsl:if>
 						</td>
 						<td>
 							<xsl:apply-templates select="track/artists" />
