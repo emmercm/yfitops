@@ -149,6 +149,10 @@
 						border-color: #222326;
 						text-align: left;
 					}
+					#content .table > tbody > tr > td.unavailable,
+					#content .table > tbody > tr > td.unavailable * {
+						color: #35373B;
+					}
 					#content .table > thead > tr > th.nowrap,
 					#content .table > tbody > tr > td.nowrap {
 						white-space: nowrap;
@@ -479,6 +483,9 @@
 				<xsl:for-each select="item">
 					<tr>
 						<td>
+							<xsl:attribute name="class">
+								<xsl:if test="/*/current_user/@country and track/available_markets/available_market and not(track/available_markets/available_market/text() = /*/current_user/@country)">unavailable</xsl:if>
+							</xsl:attribute>
 							<a>
 								<xsl:attribute name="href"><xsl:value-of select="track/external_urls/@spotify" /></xsl:attribute>
 								<xsl:value-of select="track/@name" />
@@ -494,6 +501,9 @@
 							<xsl:value-of select="floor(round(track/@duration_ms div 1000) div 60)" />:<xsl:value-of select="concat(substring('0',1,2-string-length(round(track/@duration_ms div 1000) mod 60)), round(track/@duration_ms div 1000) mod 60)" />
 						</td>
 						<td>
+							<xsl:attribute name="class">
+								<xsl:if test="/*/current_user/@country and track/album/available_markets/available_market and not(track/album/available_markets/available_market/text() = /*/current_user/@country)">unavailable</xsl:if>
+							</xsl:attribute>
 							<a>
 								<xsl:attribute name="href"><xsl:value-of select="track/album/external_urls/@spotify" /></xsl:attribute>
 								<xsl:value-of select="track/album/@name" />
