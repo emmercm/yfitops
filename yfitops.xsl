@@ -3,6 +3,12 @@
 	<xsl:template match="/yfitops">
 		<html>
 			<head>
+				<title>
+					<xsl:value-of select="local-name()" />
+					- <xsl:value-of select="current_user/@display_name" />
+					- <xsl:value-of select="@generated" />
+				</title>
+				
 				<link href='http://fonts.googleapis.com/css?family=Montserrat' rel="stylesheet" type="text/css" />
 				
 				<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
