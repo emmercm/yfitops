@@ -28,7 +28,7 @@
 					table.dataTable thead .sorting_asc::after,
 					table.dataTable thead .sorting_desc::after {
 						opacity: 1;
-						color: #80B702;
+						color: #00DA6A;
 					}
 					
 					
@@ -40,7 +40,7 @@
 					
 					/* #nav */
 					#nav {
-						background-color: #222326;
+						background-color: #282828;
 					}
 					#nav[data-spy='affix'] {
 						width: 25%;  /* col-xs-3 */
@@ -51,7 +51,7 @@
 						overflow-y: scroll;
 					}
 					#nav a {
-						color: #949599;
+						color: #ADAFB2;
 					}
 					
 					#nav li > a {
@@ -61,7 +61,7 @@
 						text-overflow: ellipsis;
 					}
 					#nav li > a:hover {
-						background-color: #222326;
+						background-color: #282828;
 					}
 					
 					#nav > li:not(:last-child) {
@@ -73,16 +73,18 @@
 					}
 					#nav > li > ul > li .glyphicon {
 						margin-right: 15px;
-						color: #FFFFFF;
+						color: #ADAFB2;
 					}
 					#nav > li > ul > li > a {
 						padding-left: 20px;
 					}
+					#nav > li > ul > li.active .glyphicon {
+						color: #FFFFFF;
+					}
 					#nav > li > ul > li.active > a {
 						padding-left: 17px;
-						background-color: #2E2F33;
-						color: #D9DBE1;
-						border-left: 3px solid #94D800;
+						color: #FFFFFF;
+						border-left: 3px solid #00DA6A;
 					}
 					
 					
@@ -92,7 +94,7 @@
 					}
 					#content {
 						padding: 20px;
-						background-color: #121314;
+						background-color: #181818;
 						color: #DFE0E5;
 						overflow: hidden;
 					}
@@ -100,7 +102,7 @@
 						display: none;
 					}
 					#content a {
-						color: #DFE0E5;
+						color: #FFFFFF;
 					}
 					#content img.lazy {
 						width: 100%;
@@ -137,8 +139,8 @@
 					#content .playlist-subheader {
 						padding: 7px 0;
 						color: #88898C;
-						border-top: 1px solid #222326;
-						border-bottom: 1px solid #222326;
+						border-top: 1px solid #282828;
+						border-bottom: 1px solid #282828;
 					}
 					
 					#content .table > thead > tr > th {
@@ -148,12 +150,11 @@
 						border-width: 0;
 					}
 					#content .table > thead > tr > th:not(:first-child) {
-						border-left:  1px solid #222326;
+						border-left:  1px solid #282828;
 					}
 					#content .table > tbody > tr > td {
 						color: #949599;
-						border-color: #222326;
-						text-align: left;
+						border-color: #282828;
 					}
 					#content .table > tbody > tr > td.unavailable,
 					#content .table > tbody > tr > td.unavailable * {
@@ -175,7 +176,7 @@
 						padding-bottom: 10px;
 						font-size: 14px;
 						text-transform: uppercase;
-						border-bottom: 1px solid #222326;
+						border-bottom: 1px solid #282828;
 					}
 					#content .playlist-playlists h5:not(:first-child) a {
 						color: #88898C;
@@ -190,7 +191,7 @@
 					}
 					#content .playlist-playlists ul.list-inline > li > div:last-child {
 						padding: 0 10px;
-						background-color: #222326;
+						background-color: #282828;
 					}
 					#content .playlist-playlists ul.list-inline > li > div > * {
 						overflow: hidden;
