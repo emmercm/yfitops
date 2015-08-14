@@ -15,6 +15,8 @@
 				
 				<link href="https://cdn.datatables.net/plug-ins/1.10.7/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet" />
 				
+				<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+				
 				<style type="text/css">
 					/* Bootstrap changes */
 					.row-no-margin {
@@ -475,11 +477,11 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Track</th>
+					<th>Song</th>
 					<th>Artist</th>
-					<th class="nowrap text-right">Time</th>
 					<th>Album</th>
-					<th class="nowrap">Added</th>
+					<th class="nowrap"><i class="fa fa-calendar-o" /></th>
+					<th class="nowrap text-right"><i class="fa fa-clock-o" /></th>
 					<th class="nowrap">
 						<xsl:if test="not(item/added_by[@id])"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
 						User
@@ -504,9 +506,6 @@
 						<td>
 							<xsl:apply-templates select="track/artists" />
 						</td>
-						<td class="nowrap text-right">
-							<xsl:value-of select="floor(round(track/@duration_ms div 1000) div 60)" />:<xsl:value-of select="concat(substring('0',1,2-string-length(round(track/@duration_ms div 1000) mod 60)), round(track/@duration_ms div 1000) mod 60)" />
-						</td>
 						<td>
 							<xsl:attribute name="class">
 								<xsl:if test="/*/current_user/@country and track/album/available_markets/available_market and not(track/album/available_markets/available_market/text() = /*/current_user/@country)">unavailable</xsl:if>
@@ -518,6 +517,9 @@
 						</td>
 						<td class="nowrap">
 							<xsl:value-of select="substring(@added_at,1,10)" />
+						</td>
+						<td class="nowrap text-right">
+							<xsl:value-of select="floor(round(track/@duration_ms div 1000) div 60)" />:<xsl:value-of select="concat(substring('0',1,2-string-length(round(track/@duration_ms div 1000) mod 60)), round(track/@duration_ms div 1000) mod 60)" />
 						</td>
 						<td class="nowrap">
 							<xsl:if test="not(added_by[@id])"><xsl:attribute name="style">display:none;</xsl:attribute></xsl:if>
