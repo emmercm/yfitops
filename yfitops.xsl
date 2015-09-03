@@ -92,7 +92,7 @@
 					
 					/* #content */
 					body {
-						background-color: #121314;
+						background-color: #181818;
 					}
 					#content {
 						padding: 20px;
