@@ -581,9 +581,9 @@
 						<xsl:apply-templates select="artists" />
 					</h5>
 				</xsl:if>
-				<xsl:if test="not(artists) and ../artists">
+				<xsl:if test="not(artists) and parent::track/artists">
 					<h5>
-						<xsl:apply-templates select="../artists" />
+						<xsl:apply-templates select="parent::track/artists" />
 					</h5>
 				</xsl:if>
 				<xsl:if test="owner[@id != /*/current_user/@id]">
