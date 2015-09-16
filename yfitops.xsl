@@ -334,7 +334,7 @@
 										<div class="row playlist-playlists">
 											<div class="col-xs-12">
 												<ul class="list-inline">
-													<xsl:for-each select="user_saved/tracks/items/item/track/album[not(preceding::album/. = .)]">
+													<xsl:for-each select="user_saved/tracks/items/item/track/album[not(preceding::album/@id = @id)]">
 														<xsl:apply-templates select="." />
 													</xsl:for-each>
 												</ul>
