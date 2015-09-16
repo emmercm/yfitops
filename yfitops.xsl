@@ -236,6 +236,9 @@
 											<li>
 												<a href="#user_saved_tracks"><span class="glyphicon glyphicon-music" />Songs</a>
 											</li>
+											<li>
+												<a href="#user_saved_albums"><span class="glyphicon glyphicon-cd" />Albums</a>
+											</li>
 										</xsl:if>
 									</ul>
 								</li>
@@ -324,6 +327,17 @@
 										<div class="row">
 											<div class="col-xs-12">
 												<xsl:apply-templates select="user_saved/tracks/items" />
+											</div>
+										</div>
+									</section>
+									<section id="user_saved_albums">
+										<div class="row playlist-playlists">
+											<div class="col-xs-12">
+												<ul class="list-inline">
+													<xsl:for-each select="user_saved/tracks/items/item/track/album[not(preceding::album/. = .)]">
+														<xsl:apply-templates select="." />
+													</xsl:for-each>
+												</ul>
 											</div>
 										</div>
 									</section>
@@ -565,6 +579,11 @@
 				<xsl:if test="artists">
 					<h5>
 						<xsl:apply-templates select="artists" />
+					</h5>
+				</xsl:if>
+				<xsl:if test="not(artists) and ../artists">
+					<h5>
+						<xsl:apply-templates select="../artists" />
 					</h5>
 				</xsl:if>
 				<xsl:if test="owner[@id != /*/current_user/@id]">
