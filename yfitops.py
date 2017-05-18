@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import base64
 import cherrypy
@@ -141,9 +141,9 @@ def var_to_xml(root, item, name=None):
             var_to_xml(child, it, name)
     else:
         if root.tag == name:
-            root.text = unicode(item)
+            root.text = str(item)
         else:
-            root.attrib[name] = unicode(item)
+            root.attrib[name] = str(item)
 
 
 # http://effbot.org/zone/element-lib.htm#prettyprint
@@ -181,7 +181,7 @@ log("\nLogged in as: " + current_user_id + "\n\n")
 log("Fetching user profile...\n")
 xml_current_user = et.SubElement(xml_root, 'current_user')
 var_to_xml(xml_current_user, current_user)
-print ""
+print('')
 
 # Fetch spotify featured
 xml_featured = et.SubElement(xml_root, 'featured')
@@ -190,7 +190,7 @@ log("Fetching featured playlists...\n")
 featured_playlists = spotify.featured_playlists(country=current_user_country)
 xml_featured_playlists = et.SubElement(xml_featured, 'playlists')
 spotify_pager(featured_playlists, xml_featured_playlists, 'playlist')
-print ""
+print('')
 
 # Fetch new releases
 xml_new_releases = et.SubElement(xml_root, 'new_releases')
@@ -199,7 +199,7 @@ log("Fetching new album releases...\n")
 new_releases_albums = spotify.new_releases(country=current_user_country)
 xml_new_releases_albums = et.SubElement(xml_new_releases, 'albums')
 spotify_pager(new_releases_albums, xml_new_releases_albums, 'album', True)
-print ""
+print('')
 
 # Fetch user saved items
 xml_user_saved = et.SubElement(xml_root, 'user_saved')
@@ -209,14 +209,14 @@ saved_tracks = spotify.current_user_saved_tracks()
 xml_user_saved_tracks = et.SubElement(xml_user_saved, 'tracks')
 xml_user_saved_tracks_items = et.SubElement(xml_user_saved_tracks, 'items')
 spotify_pager(saved_tracks, xml_user_saved_tracks_items, 'item')
-print ""
+print('')
 
 # Fetch user playlists
 log("Fetching user playlists...\n")
 playlists = spotify.user_playlists(current_user_id)
 xml_playlists = et.SubElement(xml_root, 'user_playlists')
 spotify_pager(playlists, xml_playlists, 'playlist', True)
-print ""
+print('')
 
 # Fetch owner profiles
 log("Fetching playlist owner profiles...\n")
@@ -232,14 +232,14 @@ if len(owners) > 0:
         user = spotify.user(owner)
         xml_user = et.SubElement(xml_users, 'user')
         var_to_xml(xml_user, user)
-print ""
+print('')
 
 # Write XML output
 xml_filename = SCRIPT_NAME + '-' + time.strftime('%Y%m%d-%H%M%S') + '.xml'
 log("Writing XML to " + xml_filename + "...\n")
-with open(xml_filename, 'w') as xml_file:
-    xml_file.write('<?xml version="1.0" encoding="utf-8"?>\n')
-    xml_file.write('<?xml-stylesheet type="text/xsl" href="' + SCRIPT_NAME + '.xsl"?>\n')
+with open(xml_filename, 'wb') as xml_file:
+    xml_file.write(('<?xml version="1.0" encoding="utf-8"?>\n').encode('utf-8'))
+    xml_file.write(('<?xml-stylesheet type="text/xsl" href="' + SCRIPT_NAME + '.xsl"?>\n').encode('utf-8'))
     elementtree_indent(xml_root)
     et.ElementTree(xml_root).write(xml_file, xml_declaration=False, encoding='utf-8', method='xml')
-print ""
+print('')
